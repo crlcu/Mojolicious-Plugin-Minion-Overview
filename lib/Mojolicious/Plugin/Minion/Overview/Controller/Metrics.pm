@@ -9,7 +9,7 @@ sub search {
         ->page($self->param('page') || 1)
         ->unique_jobs();
 
-    return $self->render('overview/metrics/search',
+    return $self->render('minion_overview/metrics/search',
         jobs    => $search->{ results },
         query   => $search->{ query },
     );

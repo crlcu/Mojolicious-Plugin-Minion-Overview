@@ -6,7 +6,7 @@ sub search {
 
     my $cards = $self->app->minion_overview->dashboard;
 
-    return $self->render('overview/dashboard/search',
+    return $self->render('minion_overview/dashboard/search',
         cards => $cards,
     );
 }

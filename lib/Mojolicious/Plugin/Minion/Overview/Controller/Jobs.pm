@@ -20,7 +20,7 @@ sub search {
         ->page($self->param('page') || 1)
         ->jobs();
 
-    return $self->render('overview/jobs/search',
+    return $self->render('minion_overview/jobs/search',
         title   => 'Recent Jobs',
         section => 'jobs',
         jobs    => $search->{ results },
@@ -39,7 +39,7 @@ sub show {
         ->page($self->param('page') || 1)
         ->jobs();
 
-    return $self->render('overview/jobs/show',
+    return $self->render('minion_overview/jobs/show',
         job         => $job,
         children    => $search->{ results },
         query       => $search->{ query },

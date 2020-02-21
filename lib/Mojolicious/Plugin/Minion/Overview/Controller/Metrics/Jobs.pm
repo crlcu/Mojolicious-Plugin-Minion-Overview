@@ -7,7 +7,7 @@ sub show {
     my $runtime = $self->app->minion_overview->job_runtime_metrics($self->param('job'));
     my $throughput = $self->app->minion_overview->job_throughput_metrics($self->param('job'));
 
-    return $self->render('overview/metrics/jobs/show',
+    return $self->render('minion_overview/metrics/jobs/show',
         job         => $self->param('job'),
         runtime     => $runtime,
         throughput  => $throughput,

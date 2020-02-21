@@ -11,7 +11,7 @@ sub load {
         return Mojolicious::Plugin::Minion::Overview::Backend::mysql->new(db => $minion->backend->mysql->db, minion => $minion);
     }
 
-    die "Background not yet implemented";
+    die "Backend not yet implemented";
 }
 
 1;

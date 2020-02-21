@@ -10,7 +10,7 @@ sub search {
         ->page($self->param('page') || 1)
         ->failed_jobs();
 
-    return $self->render('overview/jobs/search',
+    return $self->render('minion_overview/jobs/search',
         title   => 'Failed Jobs',
         section => 'failed_jobs',
         jobs    => $search->{ results },

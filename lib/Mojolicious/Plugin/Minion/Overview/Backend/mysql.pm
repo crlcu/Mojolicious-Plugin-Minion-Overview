@@ -225,7 +225,6 @@ FROM (
         `task`,
         SUM(IF(`state` = 'finished', TIME_TO_SEC(TIMEDIFF(`finished`, `started`)), 0)) AS `finished_in`,
         SUM(IF(`state` = 'finished', 1, 0)) AS `finished`,
-        
         SUM(IF(`state` = 'failed', TIME_TO_SEC(TIMEDIFF(`finished`, `started`)), 0)) AS `failed_in`,
         SUM(IF(`state` = 'failed', 1, 0)) AS `failed`
 
@@ -236,7 +235,7 @@ FROM (
     LIMIT ?
     OFFSET ?
 ) AS `metrics`
-ORDER BY `metrics`.`finished` DESC
+ORDER BY COALESCE(`finished_in` / `finished`, 0) DESC
 SQL
 
     my $offset = ($self->query->{ page } - 1) * $self->query->{ limit };

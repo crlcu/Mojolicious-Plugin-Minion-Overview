@@ -13,8 +13,9 @@ our $VERSION = '0.0.1';
 sub register {
     my ($self, $app, $config) = @_;
 
-    my $minion_overview = Mojolicious::Plugin::Minion::Overview::Facade->load($app->minion);
-    $app->helper(minion_overview => sub { $minion_overview });
+    # TODO: Find out why the connection is dropped
+    # my $minion_overview = Mojolicious::Plugin::Minion::Overview::Facade->load($app->minion);
+    $app->helper(minion_overview => sub { Mojolicious::Plugin::Minion::Overview::Facade->load($app->minion) });
 
     $app->helper(overview_job_status => sub {
         my ($c, $status) = @_;
@@ -43,7 +44,7 @@ sub register {
     push(@{ $app->routes->namespaces }, 'Mojolicious::Plugin::Minion::Overview::Controller');
 
     # Config
-    my $prefix = $config->{route} // $app->routes->route('overview');
+    my $prefix = $config->{route} // $app->routes->route('minion-overview');
     $prefix->to(return_to => $config->{return_to} // '/');
 
     # Static files
