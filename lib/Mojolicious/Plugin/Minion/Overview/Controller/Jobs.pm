@@ -40,7 +40,7 @@ sub search {
     );
 }
 
-=head2 retry
+=head2 show
 
 Show a job
 
