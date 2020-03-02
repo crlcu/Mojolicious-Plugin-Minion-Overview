@@ -1,6 +1,12 @@
 package Mojolicious::Plugin::Minion::Overview::Controller::FailedJobs;
 use Mojo::Base 'Mojolicious::Controller';
 
+=head2 search
+
+Show failed jobs
+
+=cut
+
 sub search {
     my $self = shift;
     

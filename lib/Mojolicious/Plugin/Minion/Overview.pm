@@ -7,8 +7,14 @@ use Mojo::ByteStream 'b';
 use Mojo::Date;
 use Mojo::File 'path';
 
-our $VERSION = '0.0.1';
+our $VERSION = '0.0.2';
 
+
+=head2 register
+
+Register the plugin and defined the routes
+
+=cut
 
 sub register {
     my ($self, $app, $config) = @_;

@@ -16,6 +16,12 @@ has 'query' => sub {{
 }};
 
 
+=head2 clear_query
+
+Clear the query fields
+
+=cut
+
 sub clear_query {
     my $self = shift;
 
@@ -30,11 +36,23 @@ sub clear_query {
     return $self;
 }
 
+=head2 job
+
+Find a job by id
+
+=cut
+
 sub job {
     my ($self, $id) = @_;
 
     return $self->minion->job($id);
 }
+
+=head2 limit
+
+Set the limit and return current instance
+
+=cut
 
 sub limit {
     my ($self, $limit) = @_;
@@ -44,6 +62,12 @@ sub limit {
     return $self;
 }
 
+=head2 page
+
+Set the page and return current instance
+
+=cut
+
 sub page {
     my ($self, $page) = @_;
 
@@ -51,6 +75,12 @@ sub page {
 
     return $self;
 }
+
+=head2 search
+
+Set the search term and return current instance
+
+=cut
 
 sub search {
     my ($self, $term) = @_;
@@ -60,6 +90,12 @@ sub search {
     return $self;
 }
 
+=head2 tags
+
+Set the search tags and return current instance
+
+=cut
+
 sub tags {
     my ($self, $tags) = @_;
 
@@ -67,6 +103,12 @@ sub tags {
 
     return $self;
 }
+
+=head2 where
+
+Add a condition for a field and return current instance
+
+=cut
 
 sub where {
     my $self = shift;

@@ -3,9 +3,12 @@ use Mojo::Base 'Mojolicious::Plugin::Minion::Overview::Backend';
 
 use Mojo::JSON qw(decode_json);
 
-sub children {
 
-}
+=head2 dashboard
+
+Dashboard stats
+
+=cut
 
 sub dashboard {
     my $self = shift;
@@ -53,10 +56,22 @@ SQL
     ];
 }
 
+=head2 failed_jobs
+
+Search failed jobs
+
+=cut
+
 sub failed_jobs {
     return shift->where('state', 'failed')
         ->jobs();
 }
+
+=head2 job_runtime_metrics
+
+Job runtime metrics
+
+=cut
 
 sub job_runtime_metrics {
     my ($self, $job) = @_;
@@ -79,6 +94,12 @@ SQL
     return $collection;
 }
 
+=head2 job_throughput_metrics
+
+Job throughput metrics
+
+=cut
+
 sub job_throughput_metrics {
     my ($self, $job) = @_;
 
@@ -100,6 +121,12 @@ SQL
 
     return $collection;
 }
+
+=head2 jobs
+
+Search jobs
+
+=cut
 
 sub jobs {
     my $self = shift;
@@ -190,6 +217,12 @@ SQL
 
     return $response;
 }
+
+=head2 unique_jobs
+
+Search the list of unique jobs
+
+=cut
 
 sub unique_jobs {
     my $self = shift;
