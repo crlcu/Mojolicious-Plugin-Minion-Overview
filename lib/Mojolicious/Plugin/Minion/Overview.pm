@@ -7,7 +7,7 @@ use Mojo::ByteStream 'b';
 use Mojo::Date;
 use Mojo::File 'path';
 
-our $VERSION = '0.0.3';
+our $VERSION = '0.0.4';
 
 
 =head2 register

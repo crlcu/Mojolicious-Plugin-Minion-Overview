@@ -1,7 +1,7 @@
 % layout 'minion_overview', title => '| Metrics for ' . $job;
 
-%= javascript 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js'
-%= javascript 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'
+%= javascript '//cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js'
+%= javascript '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'
 
 <p class="text-center">Runtime statistics for <span class="badge badge-secondary"><%= $job %></span></p>
 

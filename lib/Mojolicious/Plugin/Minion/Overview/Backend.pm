@@ -104,6 +104,22 @@ sub tags {
     return $self;
 }
 
+=head2 when
+
+Add where condition when first param is true
+
+=cut
+
+sub when {
+    my ($self, $value, $field) = @_;
+
+    if ($value) {
+        $self->where($field, $value);
+    }
+
+    return $self;
+}
+
 =head2 where
 
 Add a condition for a field and return current instance
@@ -119,6 +135,16 @@ sub where {
     $self->query->{ where }->{ $field } = $value || $condition;
 
     return $self;
+}
+
+=head2 workers
+
+Get workers information
+
+=cut
+
+sub workers {
+    return [];
 }
 
 1;

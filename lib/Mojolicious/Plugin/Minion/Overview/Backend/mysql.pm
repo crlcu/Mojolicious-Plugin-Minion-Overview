@@ -15,9 +15,9 @@ sub dashboard {
 
 my $sql = <<SQL;
 SELECT
-    SUM(IF(state = 'finished', 1, 0)) AS `finished`,
-    SUM(IF(state = 'failed', 1, 0)) AS `failed`,
-    SUM(IF(state = 'inactive', 1, 0)) AS `inactive`
+    COALESCE(SUM(IF(state = 'finished', 1, 0)), 0) AS `finished`,
+    COALESCE(SUM(IF(state = 'failed', 1, 0)), 0) AS `failed`,
+    COALESCE(SUM(IF(state = 'inactive', 1, 0)), 0) AS `inactive`
 FROM `minion_jobs`
 WHERE
     `created` >= DATE_ADD(NOW(), INTERVAL -7 DAY)
@@ -36,24 +36,27 @@ SQL
 
     my $workers = $self->db->query($sql)->hash->{ workers };
 
-    return [
-        {
-            title   => 'Finished jobs past 7 days',
-            count   => $finished,
-        },
-        {
-            title   => 'Failed jobs past 7 days',
-            count   => $failed,
-        },
-        {
-            title   => 'Inactive jobs past 7 days',
-            count   => $inactive,
-        },
-        {
-            title   => 'Active workers',
-            count   => $workers,
-        },
-    ];
+    return {
+        cards => [
+            {
+                title   => 'Finished jobs past 7 days',
+                count   => $finished,
+            },
+            {
+                title   => 'Failed jobs past 7 days',
+                count   => $failed,
+            },
+            {
+                title   => 'Inactive jobs past 7 days',
+                count   => $inactive,
+            },
+            {
+                title   => 'Active workers',
+                count   => $workers,
+            },
+        ],
+        workers => $self->workers,
+    };
 }
 
 =head2 failed_jobs
@@ -303,6 +306,44 @@ SQL
     $self->clear_query;
 
     return $response;
+}
+
+=head2 workers
+
+Get workers information
+
+=cut
+
+sub workers {
+    my $self = shift;
+
+my $sql = <<SQL;
+SELECT *
+FROM `minion_workers`
+SQL
+
+my $stats_sql = <<SQL;
+SELECT
+    COUNT(*) AS `performed`,
+    COALESCE(SUM(IF(state = 'active', 1, 0)), 0) AS `active`,
+    COALESCE(SUM(IF(state = 'finished', 1, 0)), 0) AS `finished`,
+    COALESCE(SUM(IF(state = 'failed', 1, 0)), 0) AS `failed`
+FROM `minion_jobs`
+INNER JOIN `minion_workers` on `minion_workers`.`id` = `minion_jobs`.`worker`
+WHERE
+    `minion_workers`.`id` = ?
+SQL
+    
+    my $collection = $self->db->query($sql)->hashes;
+
+    $collection->each(sub {
+        my $object = shift;
+
+        $object->{ status } = eval { decode_json($object->{ status }) };
+        $object->{ jobs_stats } = $self->db->query($stats_sql, $object->{ id })->hash;
+    });
+
+    return $collection;
 }
 
 1;

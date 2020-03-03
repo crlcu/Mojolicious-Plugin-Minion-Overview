@@ -29,6 +29,8 @@ sub search {
     my $search = $self->app->minion_overview
         ->search($self->req->param('term'))
         ->tags($self->req->every_param('tags'))
+        ->when($self->req->param('worker'), 'worker')
+        ->when($self->req->param('state'), 'state')
         ->page($self->param('page') || 1)
         ->jobs();
 

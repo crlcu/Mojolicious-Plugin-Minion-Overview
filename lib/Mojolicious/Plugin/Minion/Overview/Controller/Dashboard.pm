@@ -10,10 +10,11 @@ Show dashboard metrics
 sub search {
     my $self = shift;
 
-    my $cards = $self->app->minion_overview->dashboard;
+    my $dashboard = $self->app->minion_overview->dashboard;
 
     return $self->render('minion_overview/dashboard/search',
-        cards => $cards,
+        cards   => $dashboard->{ cards },
+        workers => $dashboard->{ workers },
     );
 }
 
