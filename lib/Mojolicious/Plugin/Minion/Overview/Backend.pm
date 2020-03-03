@@ -36,6 +36,21 @@ sub clear_query {
     return $self;
 }
 
+=head2 dashboard
+
+Dashboard stats
+
+=cut
+
+sub dashboard {
+    my $self = shift;
+
+    return {
+        overview    => $self->overview,
+        workers     => $self->workers,
+    };
+}
+
 =head2 job
 
 Find a job by id
@@ -60,6 +75,16 @@ sub limit {
     $self->query->{ limit } = $limit;
 
     return $self;
+}
+
+=head2 overview
+
+Dashboard overview
+
+=cut
+
+sub overview {
+    return [];
 }
 
 =head2 page

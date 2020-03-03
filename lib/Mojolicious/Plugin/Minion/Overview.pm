@@ -7,7 +7,7 @@ use Mojo::ByteStream 'b';
 use Mojo::Date;
 use Mojo::File 'path';
 
-our $VERSION = '0.0.4';
+our $VERSION = '0.0.5';
 
 
 =head2 register
@@ -69,6 +69,12 @@ sub register {
 
         $dashboard->get('/')->to(action => 'search')
             ->name('minion_overview.dashboard');
+
+        $dashboard->get('overview')->to(action => 'overview')
+            ->name('minion_overview.dashboard.overview');
+
+        $dashboard->get('workers')->to(action => 'workers')
+            ->name('minion_overview.dashboard.workers');
 
     # Metrics
     my $metrics = $prefix->route('metrics')

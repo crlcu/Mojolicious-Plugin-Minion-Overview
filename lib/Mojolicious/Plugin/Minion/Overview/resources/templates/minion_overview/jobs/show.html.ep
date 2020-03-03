@@ -110,4 +110,3 @@
         json.innerHTML = prettyPrintJson.toHtml(<%== to_json($job->info->{ args }) %>);
     % end
 % end
-

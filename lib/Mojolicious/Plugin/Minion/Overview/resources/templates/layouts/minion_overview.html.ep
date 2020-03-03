@@ -58,7 +58,7 @@
         </div>
     </div>
 
-    %= javascript '//code.jquery.com/jquery-3.4.1.slim.min.js'
+    %= javascript '//code.jquery.com/jquery-3.4.1.min.js'
     %= javascript '//stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js'
 
     %= content_for 'javascript'

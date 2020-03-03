@@ -11,3 +11,6 @@ Revision history for Mojolicious-Plugin-Minion-Tasks
 
 0.0.4   2020-03-03
         Show workers stats on dashboard
+
+0.0.5   2020-03-03
+        Dashboard - refresh every 20 seconds

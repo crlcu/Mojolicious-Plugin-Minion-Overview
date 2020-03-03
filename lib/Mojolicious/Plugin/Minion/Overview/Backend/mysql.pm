@@ -4,61 +4,6 @@ use Mojo::Base 'Mojolicious::Plugin::Minion::Overview::Backend';
 use Mojo::JSON qw(decode_json);
 
 
-=head2 dashboard
-
-Dashboard stats
-
-=cut
-
-sub dashboard {
-    my $self = shift;
-
-my $sql = <<SQL;
-SELECT
-    COALESCE(SUM(IF(state = 'finished', 1, 0)), 0) AS `finished`,
-    COALESCE(SUM(IF(state = 'failed', 1, 0)), 0) AS `failed`,
-    COALESCE(SUM(IF(state = 'inactive', 1, 0)), 0) AS `inactive`
-FROM `minion_jobs`
-WHERE
-    `created` >= DATE_ADD(NOW(), INTERVAL -7 DAY)
-    AND `state` IN ('finished', 'failed')
-SQL
-    
-    my $finished = $self->db->query($sql)->hash->{ finished };
-    my $failed = $self->db->query($sql)->hash->{ failed };
-    my $inactive = $self->db->query($sql)->hash->{ inactive };
-
-$sql = <<SQL;
-SELECT
-    COUNT(*) AS `workers`
-FROM `minion_workers`
-SQL
-
-    my $workers = $self->db->query($sql)->hash->{ workers };
-
-    return {
-        cards => [
-            {
-                title   => 'Finished jobs past 7 days',
-                count   => $finished,
-            },
-            {
-                title   => 'Failed jobs past 7 days',
-                count   => $failed,
-            },
-            {
-                title   => 'Inactive jobs past 7 days',
-                count   => $inactive,
-            },
-            {
-                title   => 'Active workers',
-                count   => $workers,
-            },
-        ],
-        workers => $self->workers,
-    };
-}
-
 =head2 failed_jobs
 
 Search failed jobs
@@ -219,6 +164,58 @@ SQL
     $self->clear_query;
 
     return $response;
+}
+
+=head2 overview
+
+Dashboard overview
+
+=cut
+
+sub overview {
+    my $self = shift;
+
+my $sql = <<SQL;
+SELECT
+    COALESCE(SUM(IF(state = 'finished', 1, 0)), 0) AS `finished`,
+    COALESCE(SUM(IF(state = 'failed', 1, 0)), 0) AS `failed`,
+    COALESCE(SUM(IF(state = 'inactive', 1, 0)), 0) AS `inactive`
+FROM `minion_jobs`
+WHERE
+    `created` >= DATE_ADD(NOW(), INTERVAL -7 DAY)
+    AND `state` IN ('finished', 'failed')
+SQL
+    
+    my $finished = $self->db->query($sql)->hash->{ finished };
+    my $failed = $self->db->query($sql)->hash->{ failed };
+    my $inactive = $self->db->query($sql)->hash->{ inactive };
+
+$sql = <<SQL;
+SELECT
+    COUNT(*) AS `workers`
+FROM `minion_workers`
+SQL
+    
+    my $workers = $self->db->query($sql)->hash->{ workers };
+
+    return [
+        {
+            title   => 'Finished jobs past 7 days',
+            count   => $finished,
+        },
+        {
+            title   => 'Failed jobs past 7 days',
+            count   => $failed,
+        },
+        {
+            title   => 'Inactive jobs past 7 days',
+            count   => $inactive,
+        },
+        {
+            title   => 'Active workers',
+            count   => $workers,
+        },
+    ];
 }
 
 =head2 unique_jobs
