@@ -21,3 +21,6 @@ Revision history for Mojolicious-Plugin-Minion-Tasks
 
 0.0.7   2020-03-09
         Responsive pages
+
+0.0.8   2020-03-09
+        Add/remove tag to search

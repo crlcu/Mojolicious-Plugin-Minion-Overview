@@ -1,10 +1,5 @@
 % for my $tag (@{ $query->{ tags } }) {
-    <% 
-        my @rest = grep { $_ ne $tag } @{ $query->{ tags } };
-        my $_tags;
-        $_tags = \@rest if (scalar(@rest));
-    %>
-    <a href="<%= url_for('minion_overview.jobs')->query(tags => $_tags) %>">
+    <a href="<%= url_for('minion_overview.jobs')->query(tags => [(grep { $_ ne $tag } @{ $query->{ tags } })]) %>">
         <span class="badge badge-secondary d-inline-block text-truncate" style="max-width: 250px;">&times; <%= $tag %></span>
     </a>
 % }
@@ -29,7 +24,7 @@
                         <small class="text-muted">Notes: <span class="fa fa-info-circle" title="<%= $job->{ notes } %>"></span></small><br/>
                         <small class="text-muted">Tags: 
                             % foreach my $tag (@{ $job->{ tags } }) {
-                                <a href="<%= url_for('minion_overview.jobs')->query(tags => $tag) %>">
+                                <a href="<%= url_for('minion_overview.jobs')->query(tags => [(grep { $_ ne $tag } @{ $query->{ tags } }), $tag]) %>">
                                     <span class="badge badge-secondary d-inline-block text-truncate" style="max-width: 250px;"><%= $tag %></span>
                                 </a>
                             % }
