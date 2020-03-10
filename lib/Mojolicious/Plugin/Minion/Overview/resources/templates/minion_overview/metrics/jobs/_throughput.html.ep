@@ -17,15 +17,15 @@
             data: {
                 datasets: [{
                     label: 'Finished jobs per hour',
-                    backgroundColor: 'rgb(201, 203, 207)',
-                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgb(75, 192, 192)',
+                    borderColor: 'rgb(34, 98, 98)',
                     fill: false,
                     pointHoverRadius: 8,
                     data: <%== to_json($throughput->grep(sub { $_->{ state } eq 'finished' })) %>
                 }, {
                     label: 'Failed jobs per hour',
-                    backgroundColor: 'rgb(229,43,80)',
-                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(177, 0, 37)',
                     fill: false,
                     borderDash: [5, 5],
                     pointHoverRadius: 8,
