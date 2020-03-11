@@ -325,7 +325,7 @@ sub worker {
     my $sql = <<SQL;
 SELECT
     `minion_workers`.*,
-    CAST(AVG(TIME_TO_SEC(TIMEDIFF(`minion_jobs`.`started`, `minion_jobs`.`created`))) AS DECIMAL(10, 2)) AS `wait`
+    CAST(AVG(TIME_TO_SEC(TIMEDIFF(`minion_jobs`.`started`, `minion_jobs`.`delayed`))) AS DECIMAL(10, 2)) AS `wait`
 FROM `minion_workers`
 INNER JOIN `minion_jobs` on `minion_jobs`.`worker` = `minion_workers`.`id`
 WHERE
@@ -350,15 +350,15 @@ sub worker_waittime_metrics {
 
     my $sql = <<SQL;
 SELECT
-    `minion_jobs`.`created` AS `x`,
-    TIME_TO_SEC(TIMEDIFF(`minion_jobs`.`started`, `minion_jobs`.`created`)) AS `y`,
+    `minion_jobs`.`delayed` AS `x`,
+    TIME_TO_SEC(TIMEDIFF(`minion_jobs`.`started`, `minion_jobs`.`delayed`)) AS `y`,
     `minion_jobs`.`state`
 FROM `minion_jobs`
 INNER JOIN `minion_workers` on `minion_workers`.`id` = `minion_jobs`.`worker`
 WHERE
     `minion_workers`.`id` = ?
     AND `minion_jobs`.`created` >= $start
-ORDER BY `minion_jobs`.`created`
+ORDER BY `minion_jobs`.`delayed`
 LIMIT 1000
 SQL
     
@@ -406,10 +406,12 @@ Get workers information
 sub workers {
     my $self = shift;
 
+    my $start = $self->start;
+    
     my $sql = <<SQL;
 SELECT
     `minion_workers`.*,
-    CAST(AVG(TIME_TO_SEC(TIMEDIFF(`minion_jobs`.`started`, `minion_jobs`.`created`))) AS DECIMAL(10, 2)) AS `wait`
+    CAST(AVG(TIME_TO_SEC(TIMEDIFF(`minion_jobs`.`started`, `minion_jobs`.`delayed`))) AS DECIMAL(10, 2)) AS `wait`
 FROM `minion_workers`
 INNER JOIN `minion_jobs` on `minion_jobs`.`worker` = `minion_workers`.`id`
 GROUP BY `minion_workers`.`id`
@@ -425,6 +427,7 @@ FROM `minion_jobs`
 INNER JOIN `minion_workers` on `minion_workers`.`id` = `minion_jobs`.`worker`
 WHERE
     `minion_workers`.`id` = ?
+    AND `minion_jobs`.`created` >= $start
 SQL
     
     my $collection = $self->db->query($sql)->hashes;
