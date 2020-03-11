@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-header d-flex justify-content-between">
-        <span>Throughput statistics for <span class="badge badge-secondary"><%= $job %></span></span>
+        <span>Throughput statistics for <span class="badge badge-secondary"><%= $worker->{ host } %></span></span>
     </div>
     <div class="card-body card-bg-secondary">
         <div class="row">
@@ -35,7 +35,7 @@
             options: {
                 responsive: true,
                 title: {
-                    text: 'Runtime statistics for <%= $job %>',
+                    text: 'Runtime statistics for <%= $worker->{ host } %>',
                 },
                 scales: {
                     xAxes: [{
@@ -65,7 +65,7 @@
         var chart = new Chart(container, config);
 
         setInterval(function() {
-            $.get('<%= url_for('minion_overview.api.metrics.jobs.throughput', job => $job) %>', function(json) {
+            $.get('<%= url_for('minion_overview.api.metrics.workers.throughput', worker => $worker->{ id }) %>', function(json) {
                 config.data.datasets[0].data = json.finished;
                 config.data.datasets[1].data = json.failed;
 

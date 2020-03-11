@@ -1,10 +1,10 @@
 <div class="card">
     <div class="card-header d-flex justify-content-between">
-        <span>Throughput statistics for <span class="badge badge-secondary"><%= $job %></span></span>
+        <span>Wait time statistics for <span class="badge badge-secondary"><%= $worker->{ host } %></span></span>
     </div>
     <div class="card-body card-bg-secondary">
         <div class="row">
-            <canvas id="throughput"></canvas>
+            <canvas id="waittime"></canvas>
         </div>
     </div>
 </div>
@@ -16,26 +16,18 @@
             type: 'line',
             data: {
                 datasets: [{
-                    label: 'Finished jobs per hour',
+                    label: 'Seconds',
                     backgroundColor: 'rgb(34, 98, 98)',
                     borderColor: 'rgb(75, 192, 192)',
                     fill: false,
                     pointHoverRadius: 8,
-                    data: <%== to_json($throughput->grep(sub { $_->{ state } eq 'finished' })) %>
-                }, {
-                    label: 'Failed jobs per hour',
-                    backgroundColor: 'rgb(177, 0, 37)',
-                    borderColor: 'rgb(255, 99, 132)',
-                    fill: false,
-                    borderDash: [5, 5],
-                    pointHoverRadius: 8,
-                    data: <%== to_json($throughput->grep(sub { $_->{ state } eq 'failed' })) %>
+                    data: <%== to_json($waittime) %>
                 }]
             },
             options: {
                 responsive: true,
                 title: {
-                    text: 'Runtime statistics for <%= $job %>',
+                    text: 'Runtime statistics for <%= $worker->{ host } %>',
                 },
                 scales: {
                     xAxes: [{
@@ -54,20 +46,19 @@
                         type: 'linear',
                         scaleLabel: {
                             display: true,
-                            labelString: 'Jobs'
+                            labelString: 'Seconds'
                         }
                     }]
                 },
             }
         };
-
-        var container = document.getElementById('throughput').getContext('2d');
+        
+        var container = document.getElementById('waittime').getContext('2d');
         var chart = new Chart(container, config);
 
         setInterval(function() {
-            $.get('<%= url_for('minion_overview.api.metrics.jobs.throughput', job => $job) %>', function(json) {
-                config.data.datasets[0].data = json.finished;
-                config.data.datasets[1].data = json.failed;
+            $.get('<%= url_for('minion_overview.api.metrics.workers.waittime', worker => $worker->{ id }) %>', function(json) {
+                config.data.datasets[0].data = json;
 
                 chart.update(0);
             });
