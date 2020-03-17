@@ -53,6 +53,7 @@ sub show {
     my $self = shift;
     
     my $job = $self->app->minion_overview->job($self->param('id'));
+    my $tags = $self->app->minion_overview->job_tags($self->param('id'));
 
     my $search = my $query = $self->app->minion_overview
         ->where('parent_id', $job->id)
@@ -62,6 +63,7 @@ sub show {
 
     return $self->render('minion_overview/jobs/show',
         job         => $job,
+        tags        => $tags,
         children    => $search->{ results },
         query       => $search->{ query },
     );

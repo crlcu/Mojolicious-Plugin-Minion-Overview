@@ -113,6 +113,16 @@ sub job_runtime_metrics {
     return [];
 }
 
+=head2 job_tags
+
+Job tags
+
+=cut
+
+sub job_tags {
+    return [];
+}
+
 =head2 job_throughput_metrics
 
 Job throughput metrics

@@ -44,6 +44,33 @@ SQL
     return $collection;
 }
 
+=head2 job_tags
+
+Job tags
+
+=cut
+
+sub job_tags {
+    my ($self, $job_id) = @_;
+
+    my $sql = <<SQL;
+SELECT
+    `minion_jobs`.`task`,
+    `minion_jobs`.`notes`
+FROM `minion_jobs`
+WHERE
+    `minion_jobs`.`id` = ?
+SQL
+    
+    my $object = $self->db->query($sql, $job_id)->hash;
+    
+    my $tags = [];
+
+    eval { $tags = decode_json($object->{ notes })->{ tags } || [$object->{ task }]; };
+
+    return $tags;
+}
+
 =head2 job_throughput_metrics
 
 Job throughput metrics

@@ -2,7 +2,9 @@
 
 <div class="card">
     <div class="card-header d-flex justify-content-between">
-        <span><%= $job->task %> <%= overview_job_status($job->info->{ state }) %></span>
+        <a href="<%= url_for($job->info->{ state } eq 'failed' ? 'minion_overview.failed_jobs' : 'minion_overview.jobs')->query(tags => [$job->task]) %>">
+            <%= $job->task %> <%= overview_job_status($job->info->{ state }) %>
+        </a>
 
         <div class="pull-left">
             <a href="<%= url_for('minion_overview.metrics.jobs.show', job => $job->task) %>" title="Metrics"><i class="fa fa-chart-bar"></i></a>
@@ -68,6 +70,18 @@
                 <pre class="prettyprint lang-perl" style="white-space: pre-wrap;"><%= $job->info->{ result } %></pre>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-2">
+                <strong>Tags</strong>
+            </div>
+            <div class="col">
+                % foreach my $tag (@$tags) {
+                    <a href="<%= url_for('minion_overview.jobs')->query(tags => [$tag]) %>" title="<%= $tag %>">
+                        <span class="badge badge-secondary d-inline-block text-truncate" style="max-width: 250px;"><%= $tag %></span>
+                    </a>
+                % }
+            </div>
+        </div>
     </div>
 </div>
 
@@ -76,7 +90,16 @@
         <h5>Data</h5>
     </div>
     <div class="card-body code-bg">
-        <pre id="json"><%= to_json($job->info->{ args }) %></pre>
+        <pre id="args"><%= to_json($job->info->{ args }) %></pre>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header d-flex align-items-center justify-content-between">
+        <h5>Notes</h5>
+    </div>
+    <div class="card-body code-bg">
+        <pre id="notes"><%= to_json($job->info->{ notes }) %></pre>
     </div>
 </div>
 
@@ -106,7 +129,10 @@
     %= javascript '//cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js'
 
     %= javascript begin
-        const json = document.getElementById('json');
-        json.innerHTML = prettyPrintJson.toHtml(<%== to_json($job->info->{ args }) %>);
+        const args = document.getElementById('args');
+        args.innerHTML = prettyPrintJson.toHtml(<%== to_json($job->info->{ args }) %>);
+
+        const notes = document.getElementById('notes');
+        notes.innerHTML = prettyPrintJson.toHtml(<%== to_json($job->info->{ notes }) %>);
     % end
 % end

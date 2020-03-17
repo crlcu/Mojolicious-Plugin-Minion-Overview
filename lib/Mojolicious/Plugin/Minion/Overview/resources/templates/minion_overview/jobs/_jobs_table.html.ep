@@ -1,5 +1,5 @@
 % for my $tag (@{ $query->{ tags } }) {
-    <a href="<%= url_for('minion_overview.jobs')->query(tags => [(grep { $_ ne $tag } @{ $query->{ tags } })]) %>">
+    <a href="<%= url_for('minion_overview.jobs')->query(tags => [(grep { $_ ne $tag } @{ $query->{ tags } })]) %>" title="<%= $tag %>">
         <span class="badge badge-secondary d-inline-block text-truncate" style="max-width: 250px;">&times; <%= $tag %></span>
     </a>
 % }
@@ -20,11 +20,11 @@
                     <td class="align-middle">
                         <a href="<%= url_for('minion_overview.jobs.show', id => $job->{ id }) %>"><%= $job->{ task } %></a><br/>
                         <small class="text-muted">Queue: <%= $job->{ queue } %></small> | 
-                        <small class="text-muted text-truncate">Args: <span class="fa fa-info-circle" title="<%= $job->{ args } %>"></span></small> |
+                        <small class="text-muted">Args: <span class="fa fa-info-circle" title="<%= $job->{ args } %>"></span></small> |
                         <small class="text-muted">Notes: <span class="fa fa-info-circle" title="<%= $job->{ notes } %>"></span></small><br/>
                         <small class="text-muted">Tags: 
                             % foreach my $tag (@{ $job->{ tags } }) {
-                                <a href="<%= url_for($self->current_route)->query(tags => [(grep { $_ ne $tag } @{ $query->{ tags } }), $tag]) %>">
+                                <a href="<%= url_for($self->current_route)->query(tags => [(grep { $_ ne $tag } @{ $query->{ tags } }), $tag]) %>" title="<%= $tag %>">
                                     <span class="badge badge-secondary d-inline-block text-truncate" style="max-width: 250px;"><%= $tag %></span>
                                 </a>
                             % }
@@ -37,4 +37,4 @@
             % }
         </tbody>
     </table>
-<div>
+</div>
